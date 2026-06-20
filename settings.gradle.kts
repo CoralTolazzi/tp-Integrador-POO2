@@ -1,0 +1,1 @@
+rootProject.name = "tp-integrador-obj2-2026s1"
