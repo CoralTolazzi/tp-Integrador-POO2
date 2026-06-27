@@ -1,7 +1,7 @@
 package pedido;
 
+import catalogoDeProductos.Producto;
 import lombok.Getter;
-import producto.Producto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,6 @@ public class Pedido {
     }
 
     public double getPrecio() {
-        return compras.stream().mapToDouble(Producto::getPrecio).sum();
+        return compras.stream().mapToDouble(Producto::getPrecioBase).sum();
     }
 }

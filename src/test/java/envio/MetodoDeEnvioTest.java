@@ -75,7 +75,7 @@ public class MetodoDeEnvioTest {
 
     // =================== EnvíoExpress ===================
     @Test
-    void calculaCostoSegunElPrecioDelPedido() {
+    void calculaCostoDeAcuerdoAlPrecioDelPedido() {
         when(pedido.getPrecio()).thenReturn(1000.0);
 
         EnvioExpress envio = new EnvioExpress();
