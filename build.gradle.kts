@@ -24,3 +24,9 @@ tasks.test {
             .first { it.name.contains("mockito") }}"
     )
 }
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
