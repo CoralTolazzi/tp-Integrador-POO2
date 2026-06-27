@@ -17,4 +17,8 @@ public class Pedido {
     public Direccion getDireccionEnvio() {
         return null;
     }
+
+    public double getPrecio() {
+        return compras.stream().mapToDouble(Producto::getPrecio).sum();
+    }
 }
