@@ -5,6 +5,7 @@ import catalogoDeProductos.Producto;
 import lombok.Getter;
 import lombok.Setter;
 import notificacionesDelPedido.*;
+import envio.Direccion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +13,11 @@ import java.util.List;
 @Getter
 @Setter
 public class Pedido {
-    public Estado estado;
-    List<Producto> carrito;
-    public Catalogo catalogo;
-    public List<ObservadorPedido> observadores;
-    public MailSender mail;
+    private Estado estado;
+    private List<Producto> carrito;
+    private Catalogo catalogo;
+    private List<ObservadorPedido> observadores;
+    private MailSender mail;
 
     public Pedido(Catalogo catalogo){
         setEstado(new Borrador(this));
@@ -25,16 +26,6 @@ public class Pedido {
         setObservadores(new ArrayList<>());
         setMail(new MailSenderAUX());
     }
-
-//    Deberia dejarlo? Ummm
-//    public Pedido(Estado estado, Catalogo catalogo){
-//        setEstado(estado);
-//        setCarrito(new ArrayList<>());
-//        this.getEstado().setPedido(this);
-//        setCatalogo(catalogo);
-//    }
-
-    //Operaciones
 
     public void cambiarEstado(Estado siguienteEstado) {
         setEstado(siguienteEstado);
@@ -68,5 +59,17 @@ public class Pedido {
 
     public void quitarProducto(Producto producto) {
         getCarrito().remove(producto);
+    }
+
+    public double getPeso() {
+        return carrito.stream().mapToDouble(Producto::getPeso).sum();
+    }
+
+    public Direccion getDireccionEnvio() {
+        return null;
+    }
+
+    public double getPrecio() {
+        return carrito.stream().mapToDouble(Producto::getPrecioBase).sum();
     }
 }

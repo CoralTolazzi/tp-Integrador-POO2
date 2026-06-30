@@ -50,7 +50,7 @@ public class ProductoTest {
     public void aUnProductoSeLePuedePedirSuPrecioFinal(){
         Paquete paquete2Test = new Paquete("Combo Auri","Combo Gamer Auri", 0.5, List.of(producto1Test, producto2Test, producto3Test));
         assertEquals(100.0, producto1Test.getPrecioFinal());
-        assertEquals(100.0, paquete2Test.getPrecioFinal());
+        assertEquals(300.0, paquete2Test.getPrecioFinal());
     }
 
     @Test

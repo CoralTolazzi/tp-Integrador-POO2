@@ -1,4 +1,4 @@
-package pedido;
+package envio;
 
 public class Direccion {
 }

@@ -1,6 +1,6 @@
 package envio;
 
-import pedido.Pedido;
+import cicloDeVidaDelPedido.Pedido;
 
 public interface MetodoDeEnvio {
     double calcularCosto(Pedido pedido);

@@ -1,6 +1,6 @@
 package envio;
 
-import pedido.Pedido;
+import cicloDeVidaDelPedido.Pedido;
 
 public class EnvioExpress implements MetodoDeEnvio {
     @Override

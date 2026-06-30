@@ -1,9 +1,8 @@
 package envio;
 
+import cicloDeVidaDelPedido.Pedido;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pedido.Direccion;
-import pedido.Pedido;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
