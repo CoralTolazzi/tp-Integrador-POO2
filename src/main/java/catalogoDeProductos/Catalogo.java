@@ -26,12 +26,10 @@ public class Catalogo {
     public void quitarProducto(Producto producto){
         if(getStock().containsKey(producto)){
             getStock().put(producto,(getStock().get(producto))-1);
-        } else {
-            //error, no hay stock
         }
     }
 
-    public boolean hayStockDisponible(ProductoIndividual producto) {
+    public boolean hayStockDisponible(Producto producto) {
         return getStock().getOrDefault(producto,0) != 0;
     }
 }

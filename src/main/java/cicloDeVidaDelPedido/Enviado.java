@@ -26,7 +26,7 @@ public class Enviado extends Estado {
     }
 
     @Override
-    public void emailNotificacion(NotificadorEmail observador) {
+    public void emailNotificacion(NotificadorEmail  observador) {
         observador.notificionEstadoEnviado();
     }
 

@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ProductoIndividualTest {
 
     @Test
-    public void aUnProductoSeLePuedePedirSuPeso(){
+    public void aUnProductoSeLePuedePedirSuSKU(){
         ProductoIndividual producto1Test = new ProductoIndividual("Auris Gamer","Auriculares Gamer 7.1",0.5,"1","Logitech","Computacion",200,2);
         assertEquals("1", producto1Test.getSKU());
     }

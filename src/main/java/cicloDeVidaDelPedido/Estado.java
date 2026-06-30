@@ -18,6 +18,7 @@ public abstract class Estado {
         Cancelado estadoCancelado = new Cancelado();
         this.getPedido().setEstado(estadoCancelado);
         estadoCancelado.setPedido(pedido);
+        this.cancelacionDePedido(estadoCancelado);
     }
 
     public void agregarProducto(Producto producto) {}

@@ -22,7 +22,7 @@ public class Borrador extends Estado {
 
     @Override
     public void agregarProducto(Producto producto) {
-        this.getPedido().agregarProductoAlCarrito(producto);
+            this.getPedido().agregarProductoAlCarrito(producto);
     }
 
 

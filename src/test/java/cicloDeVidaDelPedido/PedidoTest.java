@@ -66,6 +66,8 @@ public class PedidoTest {
         assertEquals(1,pedidoTest.getCarrito().size());
     }
 
+
+
     @Test
     public void aUnPedidoNoSeLePuedeAgregarProductosMientrasEstaEnEstadosQueNoSonBorrador(){
         ProductoIndividual producto1Test;
