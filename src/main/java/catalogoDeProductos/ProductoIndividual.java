@@ -3,19 +3,22 @@ package catalogoDeProductos;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Getter
 @Setter
 public class ProductoIndividual extends Producto{
-    public String SKU;
-    public String marca;
-    public String categoria;
-    public double precioBase;
-    public Map<String,Object> atributosDinamicos;
+    private String SKU;
+    private String marca;
+    private double precioBase;
 
-    public ProductoIndividual(String nombre, String descripcion, double descuento, String SKU, String marca, String categoria, double precioBase){
+    public ProductoIndividual(
+            String nombre,
+            String descripcion,
+            double descuento,
+            String SKU,
+            String marca,
+            String categoria,
+            double precioBase
+    ){
         setNombre(nombre);
         setDescripcion(descripcion);
         setDescuento(descuento);
@@ -23,10 +26,18 @@ public class ProductoIndividual extends Producto{
         setMarca(marca);
         setCategoria(categoria);
         setPrecioBase(precioBase);
-        setAtributosDinamicos(new HashMap<>());
     }
 
-    public ProductoIndividual(String nombre, String descripcion, double descuento, String SKU, String marca, String categoria, double precioBase, double peso){
+    public ProductoIndividual(
+            String nombre,
+            String descripcion,
+            double descuento,
+            String SKU,
+            String marca,
+            String categoria,
+            double precioBase,
+            double peso
+    ){
         setNombre(nombre);
         setDescripcion(descripcion);
         setDescuento(descuento);
@@ -34,24 +45,14 @@ public class ProductoIndividual extends Producto{
         setMarca(marca);
         setCategoria(categoria);
         setPrecioBase(precioBase);
-        setAtributosDinamicos(new HashMap<>());
         setPeso(peso);
     }
 
-    public void setPeso(double peso) {
+    private void setPeso(double peso) {
         getAtributosDinamicos().put("peso", peso);
     }
 
-    public void setAtributoDinamico(String atributo, Object valor){
-        getAtributosDinamicos().put(atributo,valor);
-    }
-
-    //Getters
-
-    public Object getAtributoDinamico(String atributoBuscado){
-        return getAtributosDinamicos().get(atributoBuscado);
-    }
-
+    // Getters
     @Override
     public double getPrecioFinal() {
         return getPrecioBase() - (getPrecioBase()*getDescuento());
@@ -59,8 +60,6 @@ public class ProductoIndividual extends Producto{
 
     @Override
     public double getPeso() {
-        return (double) getAtributosDinamicos().getOrDefault("peso", 1.0);
+        return ((Number) getAtributosDinamicos().getOrDefault("peso", 0.0)).doubleValue();
     }
-
-
 }

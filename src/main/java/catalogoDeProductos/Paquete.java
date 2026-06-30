@@ -5,12 +5,16 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Setter
 @Getter
+@Setter
 public class Paquete extends Producto{
-    List<Producto> productos;
+    private List<Producto> productos;
 
-    public  Paquete(String nombre,String descripcion,double descuento,List<Producto> productos){
+    public Paquete(
+            String nombre,
+            String descripcion,
+            double descuento,
+            List<Producto> productos){
         setNombre(nombre);
         setDescripcion(descripcion);
         setDescuento(descuento);
@@ -29,14 +33,8 @@ public class Paquete extends Producto{
         return precioBasePaquete - (precioBasePaquete * getDescuento());
     }
 
-    private List<Producto> getProductos() {
-        return productos;
-    }
-
     @Override
     public double getPeso() {
         return getProductos().stream().mapToDouble(Producto::getPeso).sum();
     }
-
-
 }

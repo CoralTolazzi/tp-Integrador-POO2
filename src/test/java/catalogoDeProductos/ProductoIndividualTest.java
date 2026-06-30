@@ -25,15 +25,15 @@ public class ProductoIndividualTest {
     }
 
     @Test
-    public void aUnProductoSinPesoDefinidoPesa1Kilo(){
+    public void aUnProductoSinPesoDefinidoPesa0Kilos(){
         ProductoIndividual producto1Test = new ProductoIndividual("Auris Gamer","Auriculares Gamer 7.1",0.5,"1","Logitech","Computacion",200);
-        assertEquals(1.0, producto1Test.getPeso());
+        assertEquals(0, producto1Test.getPeso());
     }
 
     @Test
     public void aUnProductoSeLePuedeAgregarUnAtributoNuevo(){
         ProductoIndividual producto1Test = new ProductoIndividual("Auris Gamer","Auriculares Gamer 7.1",0.5,"1","Logitech","Computacion",200,2);
-        producto1Test.setAtributoDinamico("Alto", 2.0);
-        assertEquals(2.0, producto1Test.getAtributoDinamico("Alto"));
+        producto1Test.setAtributo("Alto", 2.0);
+        assertEquals(2.0, producto1Test.getAtributo("Alto"));
     }
 }
