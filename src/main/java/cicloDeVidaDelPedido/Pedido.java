@@ -27,6 +27,7 @@ public class Pedido {
         setMail(new MailSenderAUX());
     }
 
+
     public void cambiarEstado(Estado siguienteEstado) {
         setEstado(siguienteEstado);
     }
