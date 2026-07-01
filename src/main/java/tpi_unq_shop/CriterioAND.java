@@ -1,5 +1,6 @@
 package tpi_unq_shop;
 
+import catalogoDeProductos.Catalogo;
 import catalogoDeProductos.Producto;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public class CriterioAND implements CriterioDeBusqueda{
         this.criterios = criterios;
     }
 
-    public boolean cumple(Producto producto) {
-        return criterios.stream().allMatch(c -> c.cumple(producto));
+    public boolean cumple(Producto producto, Catalogo c) {
+        return criterios.stream().allMatch(cr -> cr.cumple(producto, c));
     }
 }

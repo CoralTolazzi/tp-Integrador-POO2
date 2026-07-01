@@ -1,5 +1,6 @@
 package tpi_unq_shop;
 
+import catalogoDeProductos.Catalogo;
 import catalogoDeProductos.Producto;
 
 public class CriterioPorCategoria implements CriterioDeBusqueda{
@@ -9,7 +10,7 @@ public class CriterioPorCategoria implements CriterioDeBusqueda{
         this.catABuscar = categoria;
     }
 
-    public boolean cumple(Producto producto) {
+    public boolean cumple(Producto producto, Catalogo c) {
         return this.catABuscar.equals(producto.getCategoria());
     }
 }

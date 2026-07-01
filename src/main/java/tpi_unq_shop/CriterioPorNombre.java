@@ -1,5 +1,6 @@
 package tpi_unq_shop;
 
+import catalogoDeProductos.Catalogo;
 import catalogoDeProductos.Producto;
 
 public class CriterioPorNombre implements CriterioDeBusqueda{
@@ -9,7 +10,7 @@ public class CriterioPorNombre implements CriterioDeBusqueda{
         this.textoABuscar = textoABuscar;
     }
 
-    public boolean cumple(Producto producto){
+    public boolean cumple(Producto producto, Catalogo c){
         return producto.getNombre().contains(this.textoABuscar);
     }
 }

@@ -1,5 +1,6 @@
 package tpi_unq_shop;
 
+import catalogoDeProductos.Catalogo;
 import catalogoDeProductos.Producto;
 
 public class CriterioNOT implements CriterioDeBusqueda{
@@ -9,7 +10,7 @@ public class CriterioNOT implements CriterioDeBusqueda{
         this.criterioANegar = criterio;
     }
 
-    public boolean cumple(Producto producto) {
-        return !this.criterioANegar.cumple(producto);
+    public boolean cumple(Producto producto, Catalogo c) {
+        return !this.criterioANegar.cumple(producto,c);
     }
 }

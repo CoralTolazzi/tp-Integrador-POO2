@@ -15,6 +15,7 @@ public class Entregado extends Estado {
         generadorFactura.setPedido(getPedido());
         generadorFactura.setMailSender(getPedido().getMail());
         pedido.getObservadores().add(generadorFactura);
+        pedido.registrarVentas();
         pedido.notificar();
     }
 

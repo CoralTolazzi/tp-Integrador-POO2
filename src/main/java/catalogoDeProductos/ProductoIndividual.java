@@ -62,4 +62,13 @@ public class ProductoIndividual extends Producto{
     public double getPeso() {
         return ((Number) getAtributosDinamicos().getOrDefault("peso", 0.0)).doubleValue();
     }
+
+    public void setAtributo(String atributo, Object valor) {
+        atributosDinamicos.put(atributo, valor);
+    }
+
+    public Object getAtributo(String atributo) {
+        return atributosDinamicos.get(atributo);
+    }
+
 }

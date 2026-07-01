@@ -20,11 +20,5 @@ public abstract class Producto {
     public abstract double getPrecioFinal();
     public abstract double getPeso();
 
-    public Object getAtributo(String atributo) {
-        return atributosDinamicos.get(atributo);
-    }
 
-    public void setAtributo(String atributo, Object valor) {
-        atributosDinamicos.put(atributo, valor);
-    }
 }

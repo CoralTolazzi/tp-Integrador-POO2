@@ -1,5 +1,6 @@
 package reporteComponentesTest;
 
+import catalogoDeProductos.Catalogo;
 import catalogoDeProductos.Producto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,24 +14,27 @@ import java.util.List;
 
 class ReporteComponentesTest {
     private ReporteMasVendidos reporte;
+    Catalogo catalogo;
 
     @BeforeEach
     void setUp() {
         Producto productoA = mock(Producto.class);
         Producto productoB = mock(Producto.class);
+        Catalogo catalogo1 = mock(Catalogo.class);
 
         when(productoA.getPrecioFinal()).thenReturn(10.0);
         when(productoA.getNombre()).thenReturn("Producto A");
-        when(productoA.getAtributo("stock")).thenReturn(5);
-        when(productoA.getAtributo("ventas")).thenReturn(5);
+        when(catalogo1.verStockDe(productoA)).thenReturn(5);
+        when(catalogo1.verVentasDe(productoA)).thenReturn(5);
 
         when(productoB.getPrecioFinal()).thenReturn(20.0);
         when(productoB.getNombre()).thenReturn("Producto B");
-        when(productoB.getAtributo("stock")).thenReturn(10);
-        when(productoB.getAtributo("ventas")).thenReturn(10);
+        when(catalogo1.verStockDe(productoB)).thenReturn(10);
+        when(catalogo1.verVentasDe(productoB)).thenReturn(10);
 
         List<Producto> productos = Arrays.asList(productoA, productoB);
         reporte = new ReporteMasVendidos(productos);
+        catalogo = catalogo1;
     }
 
     @Test
@@ -38,9 +42,9 @@ class ReporteComponentesTest {
         assertEquals(2, reporte.productos().size());
 
         ReporteVisitor visitorMock = mock(ReporteVisitor.class);
-        reporte.aceptar(visitorMock);
+        reporte.aceptar(visitorMock, catalogo);
 
-        verify(visitorMock, times(1)).visitar(reporte);
+        verify(visitorMock, times(1)).visitar(reporte, catalogo);
     }
 
     @Test
@@ -49,7 +53,7 @@ class ReporteComponentesTest {
 
         assertEquals("", exportador.getResultado());
 
-        exportador.visitar(reporte);
+        exportador.visitar(reporte, catalogo);
 
         String esperado = """
                 Nombre;Cantidad Vendida
@@ -65,7 +69,7 @@ class ReporteComponentesTest {
         ExportadorHtml exportador = new ExportadorHtml();
         assertEquals("", exportador.getResultado());
 
-        exportador.visitar(reporte);
+        exportador.visitar(reporte, catalogo);
 
         String esperado = "<h1>Reporte de Ventas</h1>" +
                 "<div><p>Nombre: Producto A | Cantidad: 5</p>" +
@@ -79,7 +83,7 @@ class ReporteComponentesTest {
         ExportadorTxt exportador = new ExportadorTxt();
         assertEquals("", exportador.getResultado());
 
-        exportador.visitar(reporte);
+        exportador.visitar(reporte,catalogo);
 
         String esperado = """
                 <h1>Reporte de Ventas</h1>\

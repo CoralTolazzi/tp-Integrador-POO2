@@ -49,8 +49,9 @@ public class Pedido {
         this.notificar();
     }
 
+
     public void agregarProducto(Producto producto){
-        getEstado().agregarProducto(producto);
+        this.getEstado().agregarProducto(producto);
     }
 
     public void agregarProductoAlCarrito(Producto producto) {
@@ -71,5 +72,9 @@ public class Pedido {
 
     public double getPrecio() {
         return carrito.stream().mapToDouble(Producto::getPrecioBase).sum();
+    }
+
+    public void registrarVentas() {
+        carrito.forEach(p-> catalogo.registrarVentaDe(p));
     }
 }

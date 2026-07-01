@@ -1,5 +1,6 @@
 package tpi_unq_shop;
 
+import catalogoDeProductos.Catalogo;
 import catalogoDeProductos.Producto;
 
 public class CriterioPorDisponibilidad implements CriterioDeBusqueda{
@@ -9,7 +10,9 @@ public class CriterioPorDisponibilidad implements CriterioDeBusqueda{
         this.disponibilidadBuscada = disponibilidad;
     }
 
-    public boolean cumple(Producto producto) {
-        return (double) producto.getAtributo("stock") >= this.disponibilidadBuscada;
+    public boolean cumple(Producto producto, Catalogo c) {
+        return (double) c.verStockDe(producto) >= this.disponibilidadBuscada;
+
+
     }
 }

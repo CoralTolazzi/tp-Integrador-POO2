@@ -3,6 +3,7 @@ package catalogoDeProductos;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,6 +22,18 @@ public class Paquete extends Producto{
         setProductos(productos);
     }
 
+    public Paquete(
+            String nombre,
+            String descripcion,
+            double descuento){
+        setNombre(nombre);
+        setDescripcion(descripcion);
+        setDescuento(descuento);
+        setProductos(new ArrayList<>());
+    }
+
+
+
     //Getters
     @Override
     public double getPrecioBase() {
@@ -36,5 +49,9 @@ public class Paquete extends Producto{
     @Override
     public double getPeso() {
         return getProductos().stream().mapToDouble(Producto::getPeso).sum();
+    }
+
+    public void agregarProducto(Producto producto){
+        productos.addLast(producto);
     }
 }

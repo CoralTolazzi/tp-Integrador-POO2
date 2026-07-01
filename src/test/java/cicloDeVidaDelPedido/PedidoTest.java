@@ -1,12 +1,15 @@
 package cicloDeVidaDelPedido;
 
 import catalogoDeProductos.Catalogo;
+import catalogoDeProductos.Producto;
 import catalogoDeProductos.ProductoIndividual;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class PedidoTest {
 
@@ -192,7 +195,7 @@ public class PedidoTest {
     }
 
     @Test
-    public void alPasarUnPedidoDeEnviadoAEntregadoSeLeSumaElObservadorDeGeneradorDeFacturaAlPedido(){
+    public void alPasarUnPedidoDeEnviadoAEntregadoSeLeSumaElObservadorDeGeneradorDeFacturaAlPedidoYSeSumanLasVentas(){
         ProductoIndividual producto1Test;
         producto1Test = new ProductoIndividual("Auris Gamer","Auriculares Gamer 7.1",0.5,"1","Logitech","Computacion",200);
         Catalogo catalogoTest = new Catalogo();
@@ -206,6 +209,7 @@ public class PedidoTest {
         pedidoTest.siguientePaso();
         assertInstanceOf(Entregado.class, pedidoTest.getEstado());
         assertEquals(2,pedidoTest.getObservadores().size());
+        assertEquals(1,catalogoTest.verVentasDe(producto1Test));
     }
 
     @Test
@@ -270,6 +274,33 @@ public class PedidoTest {
         pedidoTest.siguientePaso();
         pedidoTest.cancelarPedido();
         assertInstanceOf(Entregado.class, pedidoTest.getEstado());
+    }
+
+    @Test
+    void alAgregarUnProductoAlCarritoQuedaEnElCarrito() {
+        Catalogo catalogoTest = new Catalogo();
+        Pedido pedido = new Pedido(catalogoTest);
+        Producto producto = mock(Producto.class);
+        when(producto.getPeso()).thenReturn(2.0);
+
+
+
+        pedido.agregarProductoAlCarrito(producto);
+
+        assertEquals(2.0, pedido.getPeso());
+    }
+
+    @Test
+    void alQuitarUnProductoDelCarritoYaNoEsta() {
+        Catalogo catalogoTest = new Catalogo();
+        Pedido pedido = new Pedido(catalogoTest);
+        Producto producto = mock(Producto.class);
+        when(producto.getPeso()).thenReturn(2.0);
+        pedido.agregarProductoAlCarrito(producto);
+
+        pedido.quitarProducto(producto);
+
+        assertEquals(0.0, pedido.getPeso());
     }
 
 

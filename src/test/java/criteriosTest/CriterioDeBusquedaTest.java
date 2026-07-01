@@ -1,5 +1,6 @@
 package criteriosTest;
 
+import catalogoDeProductos.Catalogo;
 import catalogoDeProductos.Producto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,17 +8,17 @@ import tpi_unq_shop.*;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CriterioDeBusquedaTest {
     private Producto productoMock;
+    private Catalogo catalogoMock; // <--- Agregado
 
     @BeforeEach
     void setUp() {
         productoMock = mock(Producto.class);
+        catalogoMock = mock(Catalogo.class); // <--- Inicializado como Mock
     }
 
     @Test
@@ -26,11 +27,11 @@ public class CriterioDeBusquedaTest {
 
         // Caso verdadero
         when(productoMock.getNombre()).thenReturn("Notebook Asus Gamer");
-        assertTrue(criterio.cumple(productoMock));
+        assertTrue(criterio.cumple(productoMock, catalogoMock)); // <--- Se agrega catalogoMock
 
         // Caso falso
         when(productoMock.getNombre()).thenReturn("Celular Motorola");
-        assertFalse(criterio.cumple(productoMock));
+        assertFalse(criterio.cumple(productoMock, catalogoMock)); // <--- Se agrega catalogoMock
     }
 
     @Test
@@ -39,11 +40,11 @@ public class CriterioDeBusquedaTest {
 
         // Caso verdadero
         when(productoMock.getCategoria()).thenReturn("Electro");
-        assertTrue(criterio.cumple(productoMock));
+        assertTrue(criterio.cumple(productoMock, catalogoMock));
 
         // Caso falso
         when(productoMock.getCategoria()).thenReturn("Hogar");
-        assertFalse(criterio.cumple(productoMock));
+        assertFalse(criterio.cumple(productoMock, catalogoMock));
     }
 
     @Test
@@ -52,15 +53,15 @@ public class CriterioDeBusquedaTest {
 
         // Caso verdadero (menor)
         when(productoMock.getPrecioFinal()).thenReturn(1200.0);
-        assertTrue(criterio.cumple(productoMock));
+        assertTrue(criterio.cumple(productoMock, catalogoMock));
 
         // Caso verdadero (límite)
         when(productoMock.getPrecioFinal()).thenReturn(1500.0);
-        assertTrue(criterio.cumple(productoMock));
+        assertTrue(criterio.cumple(productoMock, catalogoMock));
 
         // Caso falso (mayor)
         when(productoMock.getPrecioFinal()).thenReturn(1500.1);
-        assertFalse(criterio.cumple(productoMock));
+        assertFalse(criterio.cumple(productoMock, catalogoMock));
     }
 
     @Test
@@ -68,16 +69,16 @@ public class CriterioDeBusquedaTest {
         CriterioPorDisponibilidad criterio = new CriterioPorDisponibilidad(10.0);
 
         // Caso verdadero (mayor stock)
-        when(productoMock.getAtributo("stock")).thenReturn(15.0);
-        assertTrue(criterio.cumple(productoMock));
+        when(catalogoMock.verStockDe(productoMock)).thenReturn((int) 15.0);
+        assertTrue(criterio.cumple(productoMock, catalogoMock));
 
         // Caso verdadero (justo en el límite)
-        when(productoMock.getAtributo("stock")).thenReturn(10.0);
-        assertTrue(criterio.cumple(productoMock));
+        when(catalogoMock.verStockDe(productoMock)).thenReturn((int) 10.0);
+        assertTrue(criterio.cumple(productoMock, catalogoMock));
 
         // Caso falso
-        when(productoMock.getAtributo("stock")).thenReturn(9.9);
-        assertFalse(criterio.cumple(productoMock));
+        when(catalogoMock.verStockDe(productoMock)).thenReturn((int) 9.9);
+        assertFalse(criterio.cumple(productoMock, catalogoMock));
     }
 
     @Test
@@ -85,11 +86,11 @@ public class CriterioDeBusquedaTest {
         CriterioDeBusqueda criterioBaseMock = mock(CriterioDeBusqueda.class);
         CriterioNOT criterioNot = new CriterioNOT(criterioBaseMock);
 
-        when(criterioBaseMock.cumple(productoMock)).thenReturn(true);
-        assertFalse(criterioNot.cumple(productoMock));
+        when(criterioBaseMock.cumple(productoMock, catalogoMock)).thenReturn(true);
+        assertFalse(criterioNot.cumple(productoMock, catalogoMock));
 
-        when(criterioBaseMock.cumple(productoMock)).thenReturn(false);
-        assertTrue(criterioNot.cumple(productoMock));
+        when(criterioBaseMock.cumple(productoMock, catalogoMock)).thenReturn(false);
+        assertTrue(criterioNot.cumple(productoMock, catalogoMock));
     }
 
     @Test
@@ -99,12 +100,12 @@ public class CriterioDeBusquedaTest {
 
         CriterioAND criterioAnd = new CriterioAND(Arrays.asList(crit1, crit2));
 
-        when(crit1.cumple(productoMock)).thenReturn(true);
-        when(crit2.cumple(productoMock)).thenReturn(true);
-        assertTrue(criterioAnd.cumple(productoMock));
+        when(crit1.cumple(productoMock, catalogoMock)).thenReturn(true);
+        when(crit2.cumple(productoMock, catalogoMock)).thenReturn(true);
+        assertTrue(criterioAnd.cumple(productoMock, catalogoMock));
 
-        when(crit2.cumple(productoMock)).thenReturn(false);
-        assertFalse(criterioAnd.cumple(productoMock));
+        when(crit2.cumple(productoMock, catalogoMock)).thenReturn(false);
+        assertFalse(criterioAnd.cumple(productoMock, catalogoMock));
     }
 
     @Test
@@ -114,11 +115,11 @@ public class CriterioDeBusquedaTest {
 
         CriterioOR criterioOr = new CriterioOR(Arrays.asList(crit1, crit2));
 
-        when(crit1.cumple(productoMock)).thenReturn(false);
-        when(crit2.cumple(productoMock)).thenReturn(false);
-        assertFalse(criterioOr.cumple(productoMock));
+        when(crit1.cumple(productoMock, catalogoMock)).thenReturn(false);
+        when(crit2.cumple(productoMock, catalogoMock)).thenReturn(false);
+        assertFalse(criterioOr.cumple(productoMock, catalogoMock));
 
-        when(crit1.cumple(productoMock)).thenReturn(true);
-        assertTrue(criterioOr.cumple(productoMock));
+        when(crit1.cumple(productoMock, catalogoMock)).thenReturn(true);
+        assertTrue(criterioOr.cumple(productoMock, catalogoMock));
     }
 }
