@@ -8,6 +8,6 @@ public class GeneradorFactura extends ObservadorPedido {
     }
 
     public void generarFacturaDeEntrega() {
-        mailSender.enviarMail("3","4","2","1");
+        mailSender.enviarMail(pedido.getDireccionEnvio(),"Factura","El Precio De Tu Producto Fue:" + pedido.getPrecio() +  "." ,"");
     }
 }

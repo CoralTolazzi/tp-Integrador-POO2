@@ -19,6 +19,7 @@ public class Pedido {
     private List<ObservadorPedido> observadores;
     private MailSender mail;
 
+
     public Pedido(Catalogo catalogo){
         setEstado(new Borrador(this));
         setCarrito(new ArrayList<>());
