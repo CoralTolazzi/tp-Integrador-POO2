@@ -29,6 +29,10 @@ public class Cancelado extends Estado {
         //reembolsarCostoProductos();
     }
 
+    @Override
+    public void cancelarPedido() {
+    }
+
     public void fidelizacionDelPedido(Fidelizacion fidelizacion) {
         fidelizacion.envioDescuentoFidelizacion();
     }
