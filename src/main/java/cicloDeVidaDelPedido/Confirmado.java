@@ -9,6 +9,7 @@ public class Confirmado extends Estado {
     public Confirmado(Pedido pedido) {
         this.setPedido(pedido);
         decrementarStockDeCatalogo(getPedido().getCarrito());
+        pedido.pagarPedido(pedido.getMedioDePago());
     }
 
     @Override

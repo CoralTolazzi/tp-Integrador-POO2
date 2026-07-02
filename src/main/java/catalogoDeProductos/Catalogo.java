@@ -23,11 +23,11 @@ public class Catalogo {
     }
 
     public  Integer verStockDe(Producto producto){
-        return getStock().get(producto);
+        return getStock().getOrDefault(producto,0);
     }
 
     public void quitarProducto(Producto producto){
-        if(getStock().containsKey(producto) && (getStock().get(producto) > 0)){
+        if(this.hayStockDisponible(producto)){
             getStock().put(producto,(getStock().get(producto))-1);
         }
     }

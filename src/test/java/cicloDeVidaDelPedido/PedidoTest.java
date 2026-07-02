@@ -3,8 +3,14 @@ package cicloDeVidaDelPedido;
 import catalogoDeProductos.Catalogo;
 import catalogoDeProductos.Producto;
 import catalogoDeProductos.ProductoIndividual;
+import envio.EnvioEstandar;
+import envio.EnvioExpress;
+import envio.RetiroEnSucursal;
+import metodosDePago.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,6 +18,49 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class PedidoTest {
+    MedioDePago tarjeta;
+    MedioDePago transferencia;
+    MedioDePago billetera;
+
+    TarjetaApi tarjetaApi;
+    TransferenciaApi transferenciaApi;
+    BilleteraApi billeteraApi;
+
+
+    Datos datos;
+    Transaccion transaccion;
+
+    EnvioExpress envioExpress;
+    EnvioEstandar envioEstandar;
+    RetiroEnSucursal retiroEnSucursal;
+
+    @BeforeEach
+    void setUp() {
+        envioExpress = new EnvioExpress();
+        envioEstandar = new EnvioEstandar();
+        retiroEnSucursal = new RetiroEnSucursal();
+
+        datos = new Datos(18376287623L, 123, LocalDate.now(), 18376287623L, "alias", 5000.0);
+        transaccion = new Transaccion(12345L);
+
+        tarjetaApi = mock(TarjetaApi.class);
+        transferenciaApi = mock(TransferenciaApi.class);
+        billeteraApi = mock(BilleteraApi.class);
+
+
+
+        when(tarjetaApi.validarDatos(datos.nroTarjeta(), datos.CVV(), datos.vencimiento()))
+                .thenReturn(transaccion);
+        when(transferenciaApi.validarDatos(datos.CBU(), datos.alias()))
+                .thenReturn(transaccion);
+        when(billeteraApi.validarDatos(datos.saldo()))
+                .thenReturn(transaccion);
+
+
+        tarjeta = new TarjetaDeCredito(tarjetaApi);
+        transferencia = new Transferencia(transferenciaApi);
+        billetera = new BilleteraVirtual(billeteraApi);
+    }
 
     @Test
     public void aUnPedidoSeLePuedePedirSuEstado(){
@@ -20,7 +69,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, billetera, envioEstandar);
         assertInstanceOf(Estado.class, pedidoTest.getEstado());
     }
 
@@ -31,7 +80,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, transferencia, envioExpress);
         assertInstanceOf(ArrayList.class, pedidoTest.getCarrito());
     }
 
@@ -42,7 +91,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, tarjeta, retiroEnSucursal);
         assertInstanceOf(Catalogo.class, pedidoTest.getCatalogo());
     }
 
@@ -53,7 +102,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, transferencia, envioEstandar);
         assertInstanceOf(ArrayList.class, pedidoTest.getObservadores());
     }
 
@@ -64,12 +113,10 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, billetera, envioExpress);
         pedidoTest.agregarProducto(producto1Test);
         assertEquals(1,pedidoTest.getCarrito().size());
     }
-
-
 
     @Test
     public void aUnPedidoNoSeLePuedeAgregarProductosMientrasEstaEnEstadosQueNoSonBorrador(){
@@ -78,7 +125,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, transferencia, retiroEnSucursal);
         pedidoTest.siguientePaso();
         pedidoTest.agregarProducto(producto1Test);
         assertEquals(0,pedidoTest.getCarrito().size());
@@ -91,7 +138,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, tarjeta, envioEstandar);
         pedidoTest.agregarProducto(producto1Test);
         pedidoTest.quitarProducto(producto1Test);
         assertEquals(0,pedidoTest.getCarrito().size());
@@ -104,7 +151,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, tarjeta, envioExpress);
         pedidoTest.agregarProducto(producto1Test);
         pedidoTest.siguientePaso();
         assertEquals(1,catalogoTest.verStockDe(producto1Test));
@@ -119,7 +166,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, billetera, retiroEnSucursal);
         pedidoTest.agregarProducto(producto1Test);
         pedidoTest.siguientePaso();
         pedidoTest.cancelarPedido();
@@ -135,7 +182,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, transferencia, envioEstandar);
         pedidoTest.agregarProducto(producto1Test);
         pedidoTest.siguientePaso();
         pedidoTest.siguientePaso();
@@ -150,7 +197,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, transferencia, envioExpress);
         pedidoTest.agregarProducto(producto1Test);
         pedidoTest.siguientePaso();
         pedidoTest.siguientePaso();
@@ -167,7 +214,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, transferencia, retiroEnSucursal);
         pedidoTest.agregarProducto(producto1Test);
         pedidoTest.siguientePaso();
         pedidoTest.siguientePaso();
@@ -183,7 +230,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, transferencia, envioEstandar);
         pedidoTest.agregarProducto(producto1Test);
         pedidoTest.siguientePaso();
         pedidoTest.siguientePaso();
@@ -201,7 +248,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, transferencia, envioExpress);
         pedidoTest.agregarProducto(producto1Test);
         pedidoTest.siguientePaso();
         pedidoTest.siguientePaso();
@@ -219,7 +266,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, billetera, retiroEnSucursal);
         pedidoTest.agregarProducto(producto1Test);
         pedidoTest.siguientePaso();
         pedidoTest.siguientePaso();
@@ -237,7 +284,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, transferencia, envioEstandar);
         pedidoTest.agregarProducto(producto1Test);
         pedidoTest.cancelarPedido();
         pedidoTest.siguientePaso();
@@ -252,7 +299,7 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+        Pedido pedidoTest = new Pedido(catalogoTest, tarjeta, envioExpress);
         pedidoTest.agregarProducto(producto1Test);
         pedidoTest.cancelarPedido();
         pedidoTest.cancelarPedido();
@@ -266,7 +313,8 @@ public class PedidoTest {
         Catalogo catalogoTest = new Catalogo();
         catalogoTest.agregarProducto(producto1Test);
         catalogoTest.agregarProducto(producto1Test);
-        Pedido pedidoTest = new Pedido(catalogoTest);
+
+        Pedido pedidoTest = new Pedido(catalogoTest, transferencia, retiroEnSucursal);
         pedidoTest.agregarProducto(producto1Test);
         pedidoTest.siguientePaso();
         pedidoTest.siguientePaso();
@@ -279,7 +327,7 @@ public class PedidoTest {
     @Test
     void alAgregarUnProductoAlCarritoQuedaEnElCarrito() {
         Catalogo catalogoTest = new Catalogo();
-        Pedido pedido = new Pedido(catalogoTest);
+        Pedido pedido = new Pedido(catalogoTest, tarjeta, envioEstandar);
         Producto producto = mock(Producto.class);
         when(producto.getPeso()).thenReturn(2.0);
 
@@ -293,7 +341,7 @@ public class PedidoTest {
     @Test
     void alQuitarUnProductoDelCarritoYaNoEsta() {
         Catalogo catalogoTest = new Catalogo();
-        Pedido pedido = new Pedido(catalogoTest);
+        Pedido pedido = new Pedido(catalogoTest, transferencia, envioExpress);
         Producto producto = mock(Producto.class);
         when(producto.getPeso()).thenReturn(2.0);
         pedido.agregarProductoAlCarrito(producto);
@@ -302,10 +350,4 @@ public class PedidoTest {
 
         assertEquals(0.0, pedido.getPeso());
     }
-
-
-
-
-
-
 }

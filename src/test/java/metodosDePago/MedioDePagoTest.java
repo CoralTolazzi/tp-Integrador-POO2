@@ -161,5 +161,8 @@ public class MedioDePagoTest {
 
         @Override
         protected void ejecutarTransaccion(Transaccion transaccion) {}
+
+        @Override
+        public void pagoPara(Pedido pedido) {}
     }
 }

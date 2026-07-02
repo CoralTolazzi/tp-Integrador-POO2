@@ -1,5 +1,7 @@
 package metodosDePago;
 
+import cicloDeVidaDelPedido.Pedido;
+
 public class Transferencia extends MedioDePago {
     TransferenciaApi transferenciaApi;
 
@@ -25,5 +27,11 @@ public class Transferencia extends MedioDePago {
     @Override
     String notificarResultado(Transaccion transaccion) {
         return "COMPROBANTE: Operación nro " + transaccion.nroOperacion();
+    }
+
+    @Override
+    public void pagoPara(Pedido pedido) {
+        Datos datos = new Datos(0,0,null,18376287623L,"alias",100000);
+        this.pagar(pedido,datos);
     }
 }

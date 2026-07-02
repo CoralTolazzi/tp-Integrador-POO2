@@ -1,5 +1,9 @@
 package metodosDePago;
 
+import cicloDeVidaDelPedido.Pedido;
+
+import java.time.LocalDate;
+
 public class TarjetaDeCredito extends MedioDePago {
     TarjetaApi tarjetaApi;
 
@@ -25,5 +29,11 @@ public class TarjetaDeCredito extends MedioDePago {
     @Override
     String notificarResultado(Transaccion transaccion) {
         return "CUPÓN DE PAGO - Operación nro " + transaccion.nroOperacion();
+    }
+
+    @Override
+    public void pagoPara(Pedido pedido) {
+        Datos datos = new Datos(18376287623L,123, LocalDate.now(), 0,"",100000);
+        this.pagar(pedido,datos);
     }
 }

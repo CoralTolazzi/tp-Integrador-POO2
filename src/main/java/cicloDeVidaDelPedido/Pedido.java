@@ -2,8 +2,10 @@ package cicloDeVidaDelPedido;
 
 import catalogoDeProductos.Catalogo;
 import catalogoDeProductos.Producto;
+import envio.MetodoDeEnvio;
 import lombok.Getter;
 import lombok.Setter;
+import metodosDePago.MedioDePago;
 import notificacionesDelPedido.*;
 import envio.Direccion;
 
@@ -18,14 +20,18 @@ public class Pedido {
     private Catalogo catalogo;
     private List<ObservadorPedido> observadores;
     private MailSender mail;
+    MetodoDeEnvio metodoDeEnvio;
+    MedioDePago medioDePago;
 
 
-    public Pedido(Catalogo catalogo){
+    public Pedido(Catalogo catalogo, MedioDePago mP, MetodoDeEnvio mE){
         setEstado(new Borrador(this));
         setCarrito(new ArrayList<>());
         setCatalogo(catalogo);
         setObservadores(new ArrayList<>());
         setMail(new MailSenderAUX());
+        setMedioDePago(mP);
+        setMetodoDeEnvio(mE);
     }
 
 
@@ -78,5 +84,9 @@ public class Pedido {
 
     public void registrarVentas() {
         carrito.forEach(p-> catalogo.registrarVentaDe(p));
+    }
+
+    public void pagarPedido(MedioDePago medioDePago) {
+        medioDePago.pagoPara(this);
     }
 }

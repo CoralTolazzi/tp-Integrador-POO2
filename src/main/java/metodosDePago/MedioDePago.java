@@ -17,4 +17,6 @@ public abstract class MedioDePago {
     String notificarResultado(Transaccion transaccion) {
         return "Transacción registrada: " + transaccion.nroOperacion();
     }
+
+    public abstract   void pagoPara(Pedido pedido);
 }

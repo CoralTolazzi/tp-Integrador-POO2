@@ -1,5 +1,7 @@
 package metodosDePago;
 
+import cicloDeVidaDelPedido.Pedido;
+
 public class BilleteraVirtual extends MedioDePago {
     BilleteraApi billeteraApi;
 
@@ -25,5 +27,11 @@ public class BilleteraVirtual extends MedioDePago {
     @Override
     String notificarResultado(Transaccion transaccion) {
         return "Notificación push enviada - Operación nro " + transaccion.nroOperacion();
+    }
+
+    @Override
+    public void pagoPara(Pedido pedido) {
+        Datos datos = new Datos(0,0,null,0,"Alias",5000.0);
+        this.pagar(pedido,datos);
     }
 }

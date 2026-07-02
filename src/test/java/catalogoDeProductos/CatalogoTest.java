@@ -52,6 +52,15 @@ public class CatalogoTest {
     }
 
     @Test
+    public void noSeLePuedeQuitarUnProductoAUnCatalogoSiNoLoTieneEnElCatalogo(){
+        ProductoIndividual producto2Test;
+        producto2Test = new ProductoIndividual("Auris Gamer","Auriculares Gamer 7.1",0.5,"1","Logitech","Computacion",200);
+        Catalogo catalogoTest = new Catalogo();
+        catalogoTest.quitarProducto(producto2Test);
+        assertEquals(0,catalogoTest.verStockDe(producto2Test));
+    }
+
+    @Test
     public void aUnCatalogoSeLePuedePreguntarElStockDeUnProducto(){
         ProductoIndividual producto2Test;
         producto2Test = new ProductoIndividual("Auris Gamer","Auriculares Gamer 7.1",0.5,"1","Logitech","Computacion",200);
