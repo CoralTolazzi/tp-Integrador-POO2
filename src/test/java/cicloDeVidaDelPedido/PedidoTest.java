@@ -1,5 +1,6 @@
 package cicloDeVidaDelPedido;
 
+import envio.Sucursal;
 import catalogoDeProductos.Catalogo;
 import catalogoDeProductos.Producto;
 import catalogoDeProductos.ProductoIndividual;
@@ -38,7 +39,7 @@ public class PedidoTest {
     void setUp() {
         envioExpress = new EnvioExpress();
         envioEstandar = new EnvioEstandar();
-        retiroEnSucursal = new RetiroEnSucursal();
+        retiroEnSucursal = new RetiroEnSucursal(mock(Sucursal.class));
 
         datos = new Datos(18376287623L, 123, LocalDate.now(), 18376287623L, "alias", 5000.0);
         transaccion = new Transaccion(12345L);

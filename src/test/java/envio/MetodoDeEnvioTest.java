@@ -1,8 +1,11 @@
 package envio;
 
+import catalogoDeProductos.Producto;
 import cicloDeVidaDelPedido.Pedido;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -15,6 +18,7 @@ public class MetodoDeEnvioTest {
         pedido = mock(Pedido.class);
     }
 
+    // =================== EnvioEstandar ===================
     @Test
     void calcularCostoPedidoSinPeso() {
         when(pedido.getPeso()).thenReturn(0.0);
@@ -58,7 +62,7 @@ public class MetodoDeEnvioTest {
     }
 
     @Test
-    void estimarDias(){
+    void estimarDias() {
         EnvioEstandar envio = new EnvioEstandar();
         assertEquals(5, envio.estimarDias(pedido));
     }
@@ -72,7 +76,7 @@ public class MetodoDeEnvioTest {
         verifyNoInteractions(pedido);
     }
 
-    // =================== EnvíoExpress ===================
+    // =================== EnvioExpress ===================
     @Test
     void calculaCostoDeAcuerdoAlPrecioDelPedido() {
         when(pedido.getPrecio()).thenReturn(1000.0);
@@ -93,10 +97,34 @@ public class MetodoDeEnvioTest {
         verifyNoInteractions(pedido);
     }
 
+    // =================== RetiroEnSucursal ===================
     @Test
     void calcularCostoEsSiempreCero() {
-        RetiroEnSucursal envio = new RetiroEnSucursal();
+        Sucursal sucursal = mock(Sucursal.class);
+        RetiroEnSucursal envio = new RetiroEnSucursal(sucursal);
 
         assertEquals(0, envio.calcularCosto(pedido));
+    }
+
+    @Test
+    void siLaSucursalTieneTodoElRetiroEsInmediato() {
+        Sucursal sucursal = mock(Sucursal.class);
+        when(sucursal.tieneTodo(any())).thenReturn(true);
+        when(pedido.getCarrito()).thenReturn(List.of());
+
+        RetiroEnSucursal envio = new RetiroEnSucursal(sucursal);
+
+        assertEquals(0, envio.estimarDias(pedido));
+    }
+
+    @Test
+    void siLaSucursalNoTieneTodoElRetiroTardaHastaTresDias() {
+        Sucursal sucursal = mock(Sucursal.class);
+        when(sucursal.tieneTodo(any())).thenReturn(false);
+        when(pedido.getCarrito()).thenReturn(List.of());
+
+        RetiroEnSucursal envio = new RetiroEnSucursal(sucursal);
+
+        assertEquals(3, envio.estimarDias(pedido));
     }
 }
